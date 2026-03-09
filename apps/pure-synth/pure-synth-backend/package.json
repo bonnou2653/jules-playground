@@ -1,0 +1,18 @@
+{
+  "name": "pure-synth-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "spago run",
+    "test": "spago test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "purescript": "^0.15.15",
+    "spago": "^1.0.3"
+  }
+}
