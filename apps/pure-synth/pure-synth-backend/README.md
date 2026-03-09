@@ -17,16 +17,11 @@ PureScriptで実装されたバックエンドプロジェクトです。
 | 項目 | ユーザーの役割 | Julesの役割 |
 | :--- | :--- | :--- |
 | **アカウント準備** | Cloudflareアカウントの作成 | (不可) |
-| **環境設定** | APIトークンの取得、Julesへの共有 | READMEの保守 |
+| **環境設定** | APIトークンの取得、GitHub Secretsへの設定 | READMEの保守 |
 | **ビルド** | (任意) | `spago bundle` によるJS生成 |
 | **デプロイ(手動)** | 承認、またはJulesへの指示 | `wrangler deploy` の実行 |
 | **デプロイ(自動)** | 本番環境が必要になった際のCI設定 | CI/CD YAMLの作成・修正 |
 | **動作確認** | ブラウザでの最終確認 | `curl` や `wrangler tail` による検証 |
-
-#### シークレット情報の管理について
-デプロイに必要な `CLOUDFLARE_API_TOKEN` などのシークレット情報は、リポジトリに保存できません。以下の手順でJulesに共有してください。
-- **Julesへの共有方法**: Julesとのチャット内で「以下の環境変数を設定してデプロイしてください」と伝え、トークンを直接入力してください。Julesはそのセッション内で環境変数として保持し、デプロイを実行します。
-- **非公開ではない設定**: サービス名や公開可能な設定値については、`apps/pure-synth/pure-synth-backend/wrangler.toml` に直接記述して管理することを推奨します。
 
 ### 3. デプロイ準備
 事前に以下の準備が必要です。
@@ -36,6 +31,7 @@ PureScriptで実装されたバックエンドプロジェクトです。
    npm install -g wrangler
    ```
 3. Cloudflareへのログイン、またはAPIトークンの発行。
+   - Julesがデプロイを行う場合は、`CLOUDFLARE_API_TOKEN` 環境変数が必要です。
 
 ### 4. 手動デプロイ手順
 以下のコマンドを実行することで、開発環境から直接デプロイできます。
@@ -50,13 +46,16 @@ PureScriptで実装されたバックエンドプロジェクトです。
 2. **デプロイ**:
    `wrangler` を使用してデプロイします。
    ```bash
-   # APIトークンが共有されている場合、Julesは以下のように実行します
-   export CLOUDFLARE_API_TOKEN=shared_token_here
+   # APIトークンが設定されている場合
+   export CLOUDFLARE_API_TOKEN=your_token_here
    npx wrangler deploy dist/index.js --name pure-synth-backend
    ```
 
 ### 5. 自動デプロイ (CI/CD) ※将来用
 `main` ブランチにマージされた際に自動でデプロイされるように、GitHub Actionsを設定する際の構成案です。本番環境が必要になったタイミングで導入を検討します。
+
+**`.github/workflows/deploy.yml` の例:**
+(省略可ですが、参考として前述のYAMLを残しておきます)
 
 ### 6. エージェント（Jules）による動作確認方針
 Julesが単独で動作確認を行う際は、以下の手順を実施します。
